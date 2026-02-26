@@ -1,0 +1,500 @@
+apiVersion: v3.1.0
+kind: DataContract
+id: petstore
+name: Petstore API
+version: 1.0.12
+status: active
+domain: ecommerce
+description:
+  purpose: Represents a Pet Store API providing data access to pets, orders, and users
+  usage: Enable API consumers to understand and interact with pet store data entities through standardized data contracts
+  limitations: Sample data for demonstration purposes only
+  authoritativeDefinitions:
+    - type: businessDefinition
+      url: https://github.com/swagger-api/swagger-petstore
+      description: Canonical source for Pet Store API specification
+    - type: apiSpecification
+      url: https://petstore.swagger.io/openapi.json
+      description: OpenAPI specification for the Pet Store API
+
+authoritativeDefinitions:
+  - type: businessDefinition
+    url: https://github.com/swagger-api/swagger-petstore
+  - type: apiSpecification
+    url: https://petstore.swagger.io/openapi.json
+
+# Schema definitions - each OpenAPI schema becomes a logical entity
+schema:
+  # Pet entity
+  - id: pet_entity
+    name: Pet
+    physicalName: pets
+    physicalType: table
+    businessName: Pet
+    description: Represents a pet in the store with details about the pet and its categorization
+    tags: [pets, animals]
+    properties:
+      - id: pet_id_prop
+        name: id
+        businessName: Pet ID
+        logicalType: integer
+        physicalType: bigint
+        required: false
+        primaryKey: false
+        description: Unique identifier for the pet
+        examples:
+          - "10"
+      - id: pet_name_prop
+        name: name
+        businessName: Pet Name
+        logicalType: string
+        physicalType: varchar(255)
+        required: true
+        primaryKey: false
+        description: The name of the pet
+        examples:
+          - "doggie"
+      - id: pet_category_prop
+        name: category
+        businessName: Category
+        logicalType: object
+        physicalType: json
+        required: false
+        primaryKey: false
+        description: The category the pet belongs to
+      - id: pet_photoUrls_prop
+        name: photoUrls
+        businessName: Photo URLs
+        logicalType: array
+        physicalType: text[]
+        required: true
+        primaryKey: false
+        description: List of photo URLs for the pet
+      - id: pet_tags_prop
+        name: tags
+        businessName: Tags
+        logicalType: array
+        physicalType: json
+        required: false
+        primaryKey: false
+        description: Tags associated with the pet
+      - id: pet_status_prop
+        name: status
+        businessName: Pet Status
+        logicalType: string
+        physicalType: varchar(20)
+        required: false
+        primaryKey: false
+        description: "Pet status in the store: available, pending, or sold"
+        classification: public
+        examples:
+          - "available"
+          - "pending"
+          - "sold"
+
+  # Category entity
+  - id: category_entity
+    name: Category
+    physicalName: categories
+    physicalType: table
+    businessName: Category
+    description: Represents a category that pets can belong to
+    tags: [categories, classification]
+    properties:
+      - id: category_id_prop
+        name: id
+        businessName: Category ID
+        logicalType: integer
+        physicalType: bigint
+        required: false
+        primaryKey: true
+        primaryKeyPosition: 1
+        description: Unique identifier for the category
+        examples:
+          - "1"
+      - id: category_name_prop
+        name: name
+        businessName: Category Name
+        logicalType: string
+        physicalType: varchar(255)
+        required: false
+        primaryKey: false
+        description: The name of the category
+        examples:
+          - "Dogs"
+
+  # Tag entity
+  - id: tag_entity
+    name: Tag
+    physicalName: tags
+    physicalType: table
+    businessName: Tag
+    description: Represents a tag that can be applied to pets for organization and classification
+    tags: [tags, metadata]
+    properties:
+      - id: tag_id_prop
+        name: id
+        businessName: Tag ID
+        logicalType: integer
+        physicalType: bigint
+        required: false
+        primaryKey: true
+        primaryKeyPosition: 1
+        description: Unique identifier for the tag
+      - id: tag_name_prop
+        name: name
+        businessName: Tag Name
+        logicalType: string
+        physicalType: varchar(255)
+        required: false
+        primaryKey: false
+        description: The name of the tag
+
+  # Order entity
+  - id: order_entity
+    name: Order
+    physicalName: orders
+    physicalType: table
+    businessName: Order
+    description: Represents a purchase order for pets in the store
+    tags: [orders, transactions, ecommerce]
+    properties:
+      - id: order_id_prop
+        name: id
+        businessName: Order ID
+        logicalType: integer
+        physicalType: bigint
+        required: false
+        primaryKey: true
+        primaryKeyPosition: 1
+        description: Unique identifier for the order
+        examples:
+          - "10"
+      - id: order_petId_prop
+        name: petId
+        businessName: Pet ID
+        logicalType: integer
+        physicalType: bigint
+        required: false
+        primaryKey: false
+        description: Reference to the pet being ordered
+        examples:
+          - "198772"
+      - id: order_quantity_prop
+        name: quantity
+        businessName: Quantity
+        logicalType: integer
+        physicalType: integer
+        required: false
+        primaryKey: false
+        description: Number of items in the order
+        examples:
+          - "7"
+      - id: order_shipDate_prop
+        name: shipDate
+        businessName: Ship Date
+        logicalType: date
+        physicalType: timestamp
+        required: false
+        primaryKey: false
+        description: The date the order was shipped
+      - id: order_status_prop
+        name: status
+        businessName: Order Status
+        logicalType: string
+        physicalType: varchar(20)
+        required: false
+        primaryKey: false
+        description: "The status of the order: placed, approved, or delivered"
+        examples:
+          - "approved"
+      - id: order_complete_prop
+        name: complete
+        businessName: Complete
+        logicalType: boolean
+        physicalType: boolean
+        required: false
+        primaryKey: false
+        description: Whether the order is complete
+
+  # Customer entity
+  - id: customer_entity
+    name: Customer
+    physicalName: customers
+    physicalType: table
+    businessName: Customer
+    description: Represents a customer who makes orders
+    tags: [customers, users, ecommerce]
+    properties:
+      - id: customer_id_prop
+        name: id
+        businessName: Customer ID
+        logicalType: integer
+        physicalType: bigint
+        required: false
+        primaryKey: true
+        primaryKeyPosition: 1
+        description: Unique identifier for the customer
+        examples:
+          - "100000"
+      - id: customer_username_prop
+        name: username
+        businessName: Username
+        logicalType: string
+        physicalType: varchar(255)
+        required: false
+        primaryKey: false
+        description: The username for the customer account
+        examples:
+          - "fehguy"
+      - id: customer_address_prop
+        name: address
+        businessName: Address
+        logicalType: array
+        physicalType: json
+        required: false
+        primaryKey: false
+        description: Array of addresses associated with the customer
+
+  # Address entity
+  - id: address_entity
+    name: Address
+    physicalName: addresses
+    physicalType: table
+    businessName: Address
+    description: Represents a physical address associated with a customer
+    tags: [addresses, location]
+    properties:
+      - id: address_street_prop
+        name: street
+        businessName: Street Address
+        logicalType: string
+        physicalType: varchar(255)
+        required: false
+        primaryKey: false
+        description: The street address
+        examples:
+          - "437 Lytton"
+      - id: address_city_prop
+        name: city
+        businessName: City
+        logicalType: string
+        physicalType: varchar(100)
+        required: false
+        primaryKey: false
+        description: The city
+        examples:
+          - "Palo Alto"
+      - id: address_state_prop
+        name: state
+        businessName: State
+        logicalType: string
+        physicalType: varchar(2)
+        required: false
+        primaryKey: false
+        description: The state or province code
+        examples:
+          - "CA"
+      - id: address_zip_prop
+        name: zip
+        businessName: ZIP/Postal Code
+        logicalType: string
+        physicalType: varchar(20)
+        required: false
+        primaryKey: false
+        description: The ZIP or postal code
+        examples:
+          - "94301"
+
+  # User entity
+  - id: user_entity
+    name: User
+    physicalName: users
+    physicalType: table
+    businessName: User
+    description: Represents a user account in the system
+    tags: [users, accounts, security]
+    properties:
+      - id: user_id_prop
+        name: id
+        businessName: User ID
+        logicalType: integer
+        physicalType: bigint
+        required: false
+        primaryKey: true
+        primaryKeyPosition: 1
+        description: Unique identifier for the user
+        examples:
+          - "10"
+      - id: user_username_prop
+        name: username
+        businessName: Username
+        logicalType: string
+        physicalType: varchar(255)
+        required: false
+        primaryKey: false
+        description: The username for login
+        examples:
+          - "theUser"
+        classification: restricted
+      - id: user_firstName_prop
+        name: firstName
+        businessName: First Name
+        logicalType: string
+        physicalType: varchar(100)
+        required: false
+        primaryKey: false
+        description: User's first name
+        examples:
+          - "John"
+      - id: user_lastName_prop
+        name: lastName
+        businessName: Last Name
+        logicalType: string
+        physicalType: varchar(100)
+        required: false
+        primaryKey: false
+        description: User's last name
+        examples:
+          - "James"
+      - id: user_email_prop
+        name: email
+        businessName: Email Address
+        logicalType: string
+        physicalType: varchar(255)
+        required: false
+        primaryKey: false
+        description: User's email address
+        examples:
+          - "john@email.com"
+        classification: restricted
+      - id: user_password_prop
+        name: password
+        businessName: Password
+        logicalType: string
+        physicalType: varchar(255)
+        required: false
+        primaryKey: false
+        description: User's password (should be hashed)
+        classification: secret
+      - id: user_phone_prop
+        name: phone
+        businessName: Phone Number
+        logicalType: string
+        physicalType: varchar(20)
+        required: false
+        primaryKey: false
+        description: User's phone number
+        examples:
+          - "12345"
+        classification: restricted
+      - id: user_status_prop
+        name: userStatus
+        businessName: User Status
+        logicalType: integer
+        physicalType: integer
+        required: false
+        primaryKey: false
+        description: User status indicator
+        examples:
+          - "1"
+
+  # ApiResponse entity
+  - id: apiresponse_entity
+    name: ApiResponse
+    physicalName: api_responses
+    physicalType: table
+    businessName: API Response
+    description: Standard API response object with status information
+    tags: [api, responses, metadata]
+    properties:
+      - id: apiresponse_code_prop
+        name: code
+        businessName: Response Code
+        logicalType: integer
+        physicalType: integer
+        required: false
+        primaryKey: false
+        description: HTTP response code
+      - id: apiresponse_type_prop
+        name: type
+        businessName: Response Type
+        logicalType: string
+        physicalType: varchar(255)
+        required: false
+        primaryKey: false
+        description: Type of response
+      - id: apiresponse_message_prop
+        name: message
+        businessName: Response Message
+        logicalType: string
+        physicalType: text
+        required: false
+        primaryKey: false
+        description: Detailed response message
+
+  # Error entity
+  - id: error_entity
+    name: Error
+    physicalName: errors
+    physicalType: table
+    businessName: Error
+    description: Standard error response object
+    tags: [errors, api, exceptions]
+    properties:
+      - id: error_code_prop
+        name: code
+        businessName: Error Code
+        logicalType: string
+        physicalType: varchar(255)
+        required: true
+        primaryKey: false
+        description: Error code identifier
+      - id: error_message_prop
+        name: message
+        businessName: Error Message
+        logicalType: string
+        physicalType: text
+        required: true
+        primaryKey: false
+        description: Human-readable error message
+
+# Team ownership and support information
+team:
+  name: Petstore API Team
+  description: Team responsible for the Petstore API and data contracts
+
+# Support channels for data consumers
+support:
+  - channel: slack
+    url: "#petstore-support"
+    description: Slack channel for API support questions
+  - channel: email
+    url: mailto:apiteam@swagger.io
+    description: Email support for API issues
+
+# Tags for categorization and discovery
+tags:
+  - petstore
+  - api
+  - ecommerce
+  - animals
+
+# Custom properties specific to this contract
+customProperties:
+  - property: purpose
+    value: Enable API consumers to understand and interact with pet store data entities
+  - property: usage
+    value: Used for pet store operations including pet management, order placement, and user account management
+  - property: limitations
+    value: Sample data for demonstration purposes only
+  - property: securitySchemes
+    value: "petstore_auth (OAuth2), api_key (API Key)"
+  - property: licenseType
+    value: Apache 2.0
+  - property: licenseUrl
+    value: https://www.apache.org/licenses/LICENSE-2.0.html
+  - property: termsOfService
+    value: https://swagger.io/terms/
+  - property: apiVersion
+    value: "1.0.12"
